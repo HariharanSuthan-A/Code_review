@@ -1,0 +1,19 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+pydantic>=2.8.0
+
+openpyxl>=3.1.5
+pandas>=2.2.0
+
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-openai>=0.2.0
+langchain-ollama>=0.2.0
+langgraph>=0.2.0
+
+python-dotenv>=1.0.1
+
+# NOTE (Excela AI, text-only for now): voice STT/TTS (faster-whisper,
+# pyttsx3) is a planned Phase 2 addition. It will re-attach via the
+# existing /ws/agent status-stream contract — no agent/tool changes needed.

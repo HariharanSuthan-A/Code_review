@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+workbooks/*.xlsx
+workbooks/*.xlsm
+workbooks/history.sqlite3
+.pytest_cache/

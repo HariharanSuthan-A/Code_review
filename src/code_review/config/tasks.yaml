@@ -1,0 +1,135 @@
+code_review_task:
+  description: >
+    Conduct a thorough line-by-line review of the provided source code
+    represented by {content}. Identify the programming languages, frameworks,
+    libraries, dependencies, runtimes, databases, and other technologies used.
+
+    Analyze the code structure, architecture, implementation patterns,
+    coding conventions, readability, maintainability, and performance.
+    Identify suspicious code patterns, potential technical issues, and areas
+    that require further security investigation.
+
+    Provide evidence from the supplied code wherever possible. Reference
+    relevant files, functions, classes, and line numbers when available.
+    Do not assume that a security vulnerability exists without sufficient
+    evidence. Clearly identify any limitations caused by missing files,
+    incomplete code, or unavailable dependency information.
+
+  expected_output: >
+    A structured code review report containing an overview of the codebase,
+    technology stack, architecture, code quality, potential technical issues,
+    suspicious patterns, security investigation areas, code evidence,
+    limitations, and assumptions.
+
+    Format the output as clear Markdown without enclosing the entire report
+    in triple backticks.
+
+  agent: code_review
+  output_file: output/review.md
+
+
+code_structure_info_task:
+  description: >
+    Review the code review summary provided by the code_review agent and
+    conduct targeted technical research based on the identified technology
+    stack.
+
+    Research relevant programming languages, frameworks, libraries, database
+    technologies, application architecture, and dependency versions when
+    available. Consult authoritative documentation, official security
+    advisories, secure coding guidelines, and recognized security standards.
+
+    Identify recommended project structure, coding conventions, security
+    controls, configuration requirements, and common vulnerability patterns.
+
+    Use available internet research tools when configured. Prefer authoritative
+    and current sources. Include source links and distinguish verified facts
+    from assumptions. Do not fabricate documentation, version details, or
+    security recommendations.
+
+  expected_output: >
+    A structured technical research summary containing technology details,
+    coding conventions, project structure, security standards, common
+    vulnerabilities, secure database practices, authentication,
+    authorization, input validation, dependency security, source links,
+    assumptions, and research limitations.
+
+    Format the output as clear Markdown.
+
+  agent: code_structure_info
+  output_file: output/structure.md
+  context:
+    - code_review_task
+
+
+code_vulnerability_check_task:
+  description: >
+    Conduct a systematic security assessment of the provided source code
+    represented by {content}. Use the code review findings and technology-
+    specific research from the preceding tasks.
+
+    Examine applicable security vulnerabilities, including injection,
+    improper input validation, authentication and authorization weaknesses,
+    sensitive data exposure, insecure database queries, cryptographic
+    weaknesses, insecure configurations, dependency vulnerabilities,
+    path traversal, unsafe file handling, and improper error handling.
+
+    For each finding, include a unique identifier, title, category, affected
+    file and code location, evidence, explanation, severity, confidence,
+    potential impact, and recommended remediation.
+
+    Distinguish confirmed vulnerabilities from suspected issues requiring
+    verification. Avoid duplicate findings, unsupported claims, invented
+    code references, and false positives.
+
+  expected_output: >
+    A structured security assessment report containing an executive summary,
+    scope, prioritized findings, vulnerability categories, severity,
+    affected files, evidence, root causes, exploitation scenarios, impacts,
+    confidence levels, remediation recommendations, and verification steps.
+
+    Use Critical, High, Medium, Low, and Informational severity levels.
+    Format the output as clear Markdown.
+
+  agent: code_vulnerability_check
+  output_file: output/vulnerability.md
+  context:
+    - code_review_task
+    - code_structure_info_task
+
+
+write_prompt_task:
+  description: >
+    Review the security assessment report produced by the
+    code_vulnerability_check agent and create a detailed, implementation-ready
+    remediation prompt for a developer or coding agent.
+
+    Translate verified vulnerabilities and relevant potential risks into
+    clear instructions explaining what must change, why it is necessary,
+    and how to implement the fix.
+
+    Tailor remediation to the identified technology stack, framework,
+    dependency versions, architecture, and coding conventions.
+
+    Include corrected code examples, validation logic, secure configuration,
+    testing requirements, and measurable acceptance criteria where appropriate.
+
+    Preserve existing functionality, minimize unnecessary changes, avoid
+    hardcoded secrets, and follow secure coding practices. Do not invent
+    missing implementation details or claim fixes have been applied when
+    only a remediation prompt has been generated.
+
+  expected_output: >
+    A self-contained remediation prompt containing prioritized objectives,
+    affected files, root causes, implementation steps, secure code examples,
+    compatibility requirements, testing instructions, acceptance criteria,
+    security verification steps, assumptions, and unresolved issues.
+
+    Format the output as clear Markdown.
+
+  agent: write_prompt
+  output_file: output/prompt.md
+  context:
+    - code_review_task
+    - code_structure_info_task
+    - code_vulnerability_check_task
